@@ -24,7 +24,7 @@ WEATHER_URL = (
     f"?latitude={LAT}&longitude={LON}"
     "&current=temperature_2m,weather_code"
     "&hourly=temperature_2m,weather_code,precipitation_probability"
-    "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset"
     "&timezone=Asia%2FTokyo&forecast_days=3"
 )
 NEWS_URL = "https://www.nhk.or.jp/rss/news/cat0.xml"
@@ -183,12 +183,13 @@ def draw_now(d, w, y):
     hi, lo = round(daily["temperature_2m_max"][0]), round(daily["temperature_2m_min"][0])
     text_right(d, W - M, y + 150, f"最高 {hi}°  最低 {lo}°", font("regular", 24))
     text_right(d, W - M, y + 183, f"降水 {daily['precipitation_probability_max'][0]}%", font("regular", 24))
+    rise, sset = daily["sunrise"][0][11:16].lstrip("0"), daily["sunset"][0][11:16].lstrip("0")
+    d.text((M, y + 186), f"日の出 {rise}   日の入 {sset}", font=font("regular", 20), fill=INK)
     return y + 220
 
 
 def draw_hourly(d, w, now, y):
     d.line((M, y, W - M, y), fill=RULE, width=1)
-    section_label(d, y + 12, "3時間ごと")
     h = w["hourly"]
     times = h["time"]
     # 現在より後で 3 の倍数の時刻から 5 枠
@@ -198,11 +199,11 @@ def draw_hourly(d, w, now, y):
     for k in range(5):
         i = first + 3 * k
         cx = M + colw * (k + 0.5)
-        text_center(d, cx, y + 45, f"{int(times[i][11:13])}時", f_time)
-        draw_icon(d, h["weather_code"][i], cx, y + 112, 64)
-        text_center(d, cx, y + 150, f"{round(h['temperature_2m'][i])}°", f_temp)
-        text_center(d, cx, y + 188, f"{h['precipitation_probability'][i]}%", f_rain, SUB)
-    return y + 218
+        text_center(d, cx, y + 20, f"{int(times[i][11:13])}時", f_time)
+        draw_icon(d, h["weather_code"][i], cx, y + 87, 64)
+        text_center(d, cx, y + 125, f"{round(h['temperature_2m'][i])}°", f_temp)
+        text_center(d, cx, y + 163, f"{h['precipitation_probability'][i]}%", f_rain, SUB)
+    return y + 200
 
 
 def draw_tomorrow(d, w, y):
