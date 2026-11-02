@@ -2,7 +2,7 @@ name: dashboard
 
 on:
   schedule:
-    - cron: "5 * * * *" # 毎時5分 (UTC)
+    - cron: "47 * * * *" # 毎時47分。毎時0分前後は混雑で遅延・欠落しやすいため避ける (Kindle は毎時20分に取得)
   workflow_dispatch:
 
 permissions:
