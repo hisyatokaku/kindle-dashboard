@@ -179,10 +179,10 @@ def draw_header(d, now):
 def draw_now(d, w, y):
     cur, daily = w["current"], w["daily"]
     draw_icon(d, cur["weather_code"], M + 90, y + 95, 170)
-    text_right(d, W - M, y + 0, f"{round(cur['temperature_2m'])}°", font("bold", 120))
+    text_right(d, W - M, y - 8, f"{round(cur['temperature_2m'])}°", font("bold", 120))
     hi, lo = round(daily["temperature_2m_max"][0]), round(daily["temperature_2m_min"][0])
-    text_right(d, W - M, y + 142, f"最高 {hi}°  最低 {lo}°", font("regular", 24))
-    text_right(d, W - M, y + 175, f"降水 {daily['precipitation_probability_max'][0]}%", font("regular", 24))
+    text_right(d, W - M, y + 150, f"最高 {hi}°  最低 {lo}°", font("regular", 24))
+    text_right(d, W - M, y + 183, f"降水 {daily['precipitation_probability_max'][0]}%", font("regular", 24))
     return y + 220
 
 
