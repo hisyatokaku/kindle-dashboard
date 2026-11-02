@@ -1,0 +1,40 @@
+name: dashboard
+
+on:
+  schedule:
+    - cron: "5 * * * *" # 毎時5分 (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: write # 60日無活動による schedule 停止を防ぐため
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -q && sudo apt-get install -y -q fonts-noto-cjk
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - run: python generate.py public/dashboard.png
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deploy
+        uses: actions/deploy-pages@v4
+      - name: keep schedule alive
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/dashboard.yml/enable"
+        env:
+          GH_TOKEN: ${{ github.token }}
