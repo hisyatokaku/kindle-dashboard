@@ -14,6 +14,13 @@ log "start"
 # FW 5.16 の KT3 では stop framework / lab126_gui で KPPMainAppV2 が異常終了するため。
 lipc-set-prop com.lab126.powerd preventScreenSaver 1
 
+# 通常画面が上書きしてこないよう、描画するプロセスを一時停止 (SIGSTOP) する。
+# 終了させないのでクラッシュはしない。元に戻すには再起動する。
+ps -ef >"$DIR/ps.txt" 2>&1 || ps >"$DIR/ps.txt" 2>&1 # 調査用
+for p in KPPMainAppV2 awesome pillowd; do
+  killall -STOP "$p" 2>/dev/null && log "paused $p"
+done
+
 while true; do
   # Wi-Fi が使えるようになるまで最大 60 秒待つ
   i=0
