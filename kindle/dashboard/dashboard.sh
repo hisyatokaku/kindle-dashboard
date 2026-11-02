@@ -10,9 +10,8 @@ LOG=$DIR/dashboard.log
 log() { echo "$(date '+%F %T') $*" >>"$LOG"; }
 
 log "start"
-# Kindle の通常画面を止める (5.x 世代)
-stop framework >/dev/null 2>&1
-stop lab126_gui >/dev/null 2>&1
+# 通常画面 (framework) は止めずに上から描画する。
+# FW 5.16 の KT3 では stop framework / lab126_gui で KPPMainAppV2 が異常終了するため。
 lipc-set-prop com.lab126.powerd preventScreenSaver 1
 
 while true; do
