@@ -2,7 +2,7 @@ name: dashboard
 
 on:
   schedule:
-    - cron: "47 * * * *" # 毎時47分。毎時0分前後は混雑で遅延・欠落しやすいため避ける (Kindle は毎時20分に取得)
+    - cron: "7,22,37,52 * * * *" # 1時間に4回。schedule は混雑で遅延・欠落しやすいため回数で補う (Kindle は毎時20分に最新を取得)
   workflow_dispatch:
 
 permissions:
