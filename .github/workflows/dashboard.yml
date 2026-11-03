@@ -9,7 +9,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  actions: write # 60日無活動による schedule 停止を防ぐため
 
 concurrency:
   group: pages
@@ -34,7 +33,3 @@ jobs:
           path: public
       - id: deploy
         uses: actions/deploy-pages@v4
-      - name: keep schedule alive
-        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/dashboard.yml/enable"
-        env:
-          GH_TOKEN: ${{ github.token }}
